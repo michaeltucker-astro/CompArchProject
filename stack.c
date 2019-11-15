@@ -2,9 +2,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <unistd.h>
+#include "fitsio.h"
+
 int checkFileExists(char *fname);
 
-#define N_MAX_FILES = 1000;
+#define N_MAX_FILES 1000
 
 int main(int argc, char *argv[])
 {
