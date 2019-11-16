@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		status = checkFileExists(argv[i]);
 		if (status != 0){
 			printf("File check failed for: ");
-			printf(argv[i]);
+			printf("%s", argv[i]);
 			printf(", exiting...\n");
 			return (status);
 		}
@@ -127,5 +127,8 @@ int checkStatus(int status)
 	if (status) {
 		fits_report_error(stderr, status);
 		exit(1);
+	}
+	else {
+		return(0);
 	}
 }
