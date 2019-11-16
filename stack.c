@@ -6,7 +6,7 @@
 
 int checkFileExists(char *fname);
 
-#define N_MAX_FILES 100
+#define N_MAX_FILES 1000
 
 double outimg[2048][2048];
 
