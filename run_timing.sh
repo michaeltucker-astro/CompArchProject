@@ -6,7 +6,7 @@ Nstart=2
 Nend=100
 Nstep=1
 outff="times.list"
-
+STACK="./stack"
 
 function usage()
 {
@@ -84,7 +84,7 @@ elif [ `uname -n` = 'poohbah' ]; then
 else
 	#linux laptop
 	cmd="date +%s%N"
-	fitsdir="/home/michael/Documents/LightEchoes/RESUB"
+	fitsdir="/home/michael/Documents/Science/LightEcho/RESUB"
 fi
 
 check_date="2019-10-11T11:12:12"
@@ -128,7 +128,7 @@ do
 	echo "#Nstack = $Nstart" >> $outff
 	echo -e "\tWorking Nstack = $Nstart"
 
-	stackcmd="./stackO1 `head -n $Nstart tmp.files`"
+	stackcmd="$STACK `head -n $Nstart tmp.files`"
 	for ((i=0;i<$niter;i++)); do
 		
 		start=`$cmd`
