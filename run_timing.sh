@@ -3,7 +3,7 @@
 #defaults 
 niter=10
 Nstart=2
-Nend=1000
+Nend=100
 Nstep=1
 outff="times.list"
 
@@ -128,7 +128,7 @@ do
 	echo "#Nstack = $Nstart" >> $outff
 	echo -e "\tWorking Nstack = $Nstart"
 
-	stackcmd="./stack `head -n $Nstart tmp.files`"
+	stackcmd="./stackO1 `head -n $Nstart tmp.files`"
 	for ((i=0;i<$niter;i++)); do
 		
 		start=`$cmd`
