@@ -5,8 +5,8 @@ niter=10
 Nstart=2
 Nend=100
 Nstep=1
-outff="times.list"
-STACK="./stack"
+outff="output/timesO3.osu"
+STACK="./stackO3"
 
 function usage()
 {
@@ -69,23 +69,27 @@ fi
 		
 #check system and set file locations and cmd defaults
 
-if [ `uname` = 'Darwin' ]; then
-	# on the mac desktop
-	cmd="gdate +%s%N"
-	fitsdir="/Users/skywalker/Documents/Science/LightEcho/RESUB"
-elif [ `uname -n` = 'tacoma' ]; then
-	#on local cluster
-	cmd="date +%s%N"
-	fitsdir="/data/poohbah/1/assassin/Stacks/RESUB"
-elif [ `uname -n` = 'poohbah' ]; then
-	# on the OSU servers
-	cmd="date +%s%N"
-	fitsdir="/data/poohbah/1/assassin/Stacks/RESUB"
-else
-	#linux laptop
-	cmd="date +%s%N"
-	fitsdir="/home/michael/Documents/Science/LightEcho/RESUB"
-fi
+case `uname -a` in 
+	*Darwin* 	)	# on the mac desktop
+				cmd="gdate +%s%N"
+				fitsdir="/Users/skywalker/Documents/Science/LightEcho/RESUB"
+				;;
+	*tacoma*	)	#on local cluster
+				cmd="date +%s%N"
+				fitsdir="/data/poohbah/1/assassin/Stacks/RESUB"
+				;;
+	*ohio-state*	)	# on the OSU servers
+				cmd="date +%s%N"
+				fitsdir="/data/poohbah/1/assassin/Stacks/RESUB"
+				;;
+	*skywalker*	)	#linux laptop
+				cmd="date +%s%N"
+				fitsdir="/home/michael/Documents/Science/LightEcho/RESUB"
+				;;
+	*		)	echo "Unrecognized system! See uname -a for output"
+				exit 1
+				;;
+esac
 
 check_date="2019-10-11T11:12:12"
 check_time=1570828332000000000
@@ -94,8 +98,8 @@ if [ ! -d $fitsdir ]; then
 	echo "Cannot find FITS input directory! Expected: $fitsdir"
 	exit 1
 elif [ ! `$cmd -d $check_date` = $check_time ]; then
-	echo "Time verification failed! Aborting..."
-	exit 1
+	echo "WARNING: Time verification failed!"
+	#exit 1
 fi
 
 echo "All quality checks passed, loading filenames..."
