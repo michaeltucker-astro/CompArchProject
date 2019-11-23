@@ -3,10 +3,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "fitsio.h"
+#include "timer.h"
 
 int checkFileExists(char *fname);
 
 #define N_MAX_FILES 1000
+#define PROC_FREQ 4.2 //GHz
 
 double outimg[2048][2048];
 
@@ -19,6 +21,9 @@ int main(int argc, char *argv[])
 	fitsfile *fptr, *optr;
 	long firstpix[3] = {1,1,1};
 	int Nx=2048, Ny=2048;
+	mytimer_t t;
+	timer_new(&t, PROC_FREQ);
+	long ticks0, ticks1, Nticks;
 
 	if (argc < 2){
 		printf("No files passed, exiting...\n");
@@ -45,7 +50,6 @@ int main(int argc, char *argv[])
 
 	printf("Starting stack routine...\n");
 
-
 	for (i=0;i<Nx;i++){
 		for (j=0;j<Ny;j++){
 			outimg[i][j] = 0;
@@ -53,6 +57,7 @@ int main(int argc, char *argv[])
 	}
 
 	apix = (double *) malloc(Nx * sizeof(double));
+	Nticks = 0;
 	for (f=1; f<argc-1; f++){
 		printf("\nWorking on image: %d\n",f);
 		fits_open_file(&fptr, argv[f], READONLY, &status);
@@ -61,17 +66,22 @@ int main(int argc, char *argv[])
 			printf("\r\tLooping over rows: %d", firstpix[1]);
 			if (fits_read_pix(fptr, TDOUBLE, firstpix, Nx, NULL, apix, NULL, &status)) break;
 			if (status) break;
+			ticks0 = getticks();
 			for (i=0;i<Nx;i++){
 				//printf("\t\tLooping over pixels: %d,", i);
 				//printf("apix[i] = %.2f\n", apix[i]);
 				outimg[firstpix[1]-1][i] += apix[i];
 			}
+			ticks1 = getticks();
+			Nticks += (ticks1-ticks0);
 		}
 		printf("\n\tComplete.\n");
 		fits_close_file(fptr, &status);
 		if (status) break;
 		printf("File %d closed.\n", f);
 	}
+	printf("Total cycles: %ld\n", Nticks);
+	printf("Total computations: %d\n", (Nx*Ny*(argc-1)));
 
 
 
