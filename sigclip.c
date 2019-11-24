@@ -98,6 +98,7 @@ double sigclip(int I)
 	uplim = mean + 3.0*std;
 	lowlim = mean - 3.0*std;
 	if ( (diff[idx] > uplim) || (diff[idx] < lowlim) ) {
+		printf("Sigma clipping activated!\n");
 		mean = 0.0;
 		for (i=0;i<100;i++){
 			if (i!=idx) mean += array[i][I]/99.;
