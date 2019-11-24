@@ -48,7 +48,7 @@ do
 	exe="./clipO$opt"
 	echo "Starting runs for optimization level $opt ($exe), outfile=$outfile, Niter=$Niter"
 	for ((i=0;i<$Niter;i++)) do
-		clocks=`$exe | awk '{print $2}'`
+		clocks=`$exe | awk '{print $3}'`
 		echo $clocks >> $outfile
 	done
 done
