@@ -16,21 +16,16 @@ int main()
 	long ticks0, ticks1, dticks;
 	FILE *fin;
 	double output[1000];
-	double err, clip_mean;
+	double clip_mean;
 	double values[1000];
-
-	printf("Reading data files...\n");
 
 	for (i=0;i<100;i++){
 		readData(i);
 	}
 
-	err = 0.0;
 	ticks0 = getticks();
-	printf("Starting sigma clipping computation...\n");
 	for (i=0;i<1000;i++){;
 		clip_mean = sigclip(i);
-		err += pow(clip_mean - output[i],2.0);
 	}
 	ticks1 = getticks();
 	dticks = (ticks1-ticks0);
@@ -48,8 +43,6 @@ void readData(int i)
 
 	sprintf(fname, "data/data%d.txt", i+1);
 
-	printf("\treadData: i=%d, ",i);
-	printf("fname=%s\n",fname);
 
 	if ( (fin = fopen(fname, "r")) != NULL ) {
 		while ( fscanf(fin, "%lf", &hold) != EOF ) {
@@ -76,10 +69,9 @@ double sigclip(int I)
 	int i=0;
 	int idx=10;
 
-	printf("\tClipping for array: %d\n", I);
 
 	for (i=0;i<100;i++) mean += array[i][I]/100. ;
-	printf("\t\tMean computed: %lf\n", mean);
+
 	for (i=0;i<100;i++) {
 		diff[i] = ( array[i][I] - mean);
 		std += (diff[i]*diff[i]);
@@ -97,8 +89,7 @@ double sigclip(int I)
 	std = sqrt( std / 99.);
 	uplim = mean + 3.0*std;
 	lowlim = mean - 3.0*std;
-	if ( (diff[idx] > uplim) || (diff[idx] < lowlim) ) {
-		printf("Sigma clipping activated!\n");
+	if ( (array[idx][I] > uplim) || (array[idx][I] < lowlim) ) {
 		mean = 0.0;
 		for (i=0;i<100;i++){
 			if (i!=idx) mean += array[i][I]/99.;
