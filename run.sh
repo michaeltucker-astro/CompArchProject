@@ -45,6 +45,9 @@ for opt in 0 1 2 3
 do
 
 	outfile="output/clocksO$opt.$machine"
+	if [ -e $outfile ]; then
+		rm $outfile
+	fi
 	exe="./clipO$opt"
 	echo "Starting runs for optimization level $opt ($exe), outfile=$outfile, Niter=$Niter"
 	for ((i=0;i<$Niter;i++)) do

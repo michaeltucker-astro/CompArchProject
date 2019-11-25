@@ -24,10 +24,12 @@ int main()
 	}
 
 	ticks0 = getticks();
-	for (i=0;i<1000;i++){;
+	printf("%ld ", ticks0);
+	for (i=0;i<1000;i++){
 		clip_mean = sigclip(i);
 	}
 	ticks1 = getticks();
+	printf(" %ld\n", ticks1);
 	dticks = (ticks1-ticks0);
 	printf("Clock cycles: %ld\n", dticks);
 	
@@ -64,13 +66,13 @@ double sigclip(int I)
 	double uplim, lowlim;
 	double mean = 0.0;
 	double std = 0.0;
-	double diff[1000];
+	double diff[100];
 	double maxdiff = 0.0;
 	int i=0;
 	int idx=10;
 
 
-	for (i=0;i<100;i++) mean += array[i][I]/100. ;
+	for (i=0;i<100;i++) mean += array[i][I] * 0.01 ;
 
 	for (i=0;i<100;i++) {
 		diff[i] = ( array[i][I] - mean);
@@ -81,11 +83,6 @@ double sigclip(int I)
 		}
 	}
 	
-	if (idx==10){
-		printf("Error computing maxdiff! Aborting...\n");
-		exit(1);
-	}
-
 	std = sqrt( std / 99.);
 	uplim = mean + 3.0*std;
 	lowlim = mean - 3.0*std;
